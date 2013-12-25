@@ -7,7 +7,7 @@ var like_count = 0; // Seems redundant, but being used to stop user from voting 
 var dislike_count = 0; // Seems redundant, but being used to stop user from voting more than once per song
 var isMuted = false; // Carries mute result from one song to the next
 var volume = 50; // Default volume
-var num_messages = 0 // Default number of messages received
+var num_messages = 0; // Default number of messages received
 
 // Document ready function ---------------------------------------------------------------
 $(function() {
@@ -32,7 +32,6 @@ $(function() {
 	if((document.URL).match(/\/rooms\/.+/)) {
 		getRoomId(); // change global variable
 		$('#room-'+room_id).fadeIn(1000);
-		console.log(room_id); 
 		app.newUser(room_id); // add new user to room list
 	}
 
@@ -52,7 +51,7 @@ window.onbeforeunload = function(e) {
 		isMuted = false;
 		var id = parseInt(room_id);
 		app.removeUser(id);
-	  return null;
+		return null;
 	}
 };
 
@@ -66,7 +65,6 @@ function playSong(sc_ident, position) {
 			song.unload(); // Safety. Unload song before new song is loaded
 		}
 		song = sound; // Assign song to global variable
-		console.log(sound);
 		song.setVolume(volume);
 		song.play();
 	});
@@ -93,13 +91,13 @@ function findRoom() {
 function logoSearch() {
   $('#logo-search').on('click', function() {
     if ($(".room").hasClass('out-left')) {
-    	$('#search-text').attr('disabled', 'disabled');
+			$('#search-text').attr('disabled', 'disabled');
       $('.room').stop().animate({
         left: '0'
       }, 500);
       $('.room').toggleClass('out-left');
     } else {
-    	$('#search-text').removeAttr('disabled');
+			$('#search-text').removeAttr('disabled');
       $('.room').stop().animate({
         left: '-20%'
       }, 500);
@@ -109,7 +107,7 @@ function logoSearch() {
 }
 
 // function clickAnywhereToSlideSearchBack() {
-// 	$('#main-container').
+//	$('#main-container').
 // }
 
 
@@ -118,7 +116,7 @@ function logoChat() {
 	$('#logo-chat').on('click', function() {
 		$('#chatroom').stop().fadeToggle(500);
 		checkMessages();
-	}); 
+	});
 }
 
 // Returns search results from SoundCloud on click ---------------------------------------
@@ -147,7 +145,6 @@ function searchButtonClick() {
 // Queries the SoundCloud API for songs matching a search string -------------------------
 function searchSC(search_string) {
 	SC.get('/tracks', { q: search_string, limit: 25, order: 'hotness', streamable: true }, function(tracks) {
-		console.log(tracks);
 		search_return = tracks; // Returns all search results from SoundCloud
 		var $search_results = $('#search-results');
 		$search_results.empty();
@@ -180,7 +177,6 @@ function searchResultHover() {
 // Puts a song from the search results to room playlist on click -------------------------
 function searchResultClick() {
 	$("#search-results").on("click", "div", function() {
-		console.log(this);
 		var index = $(this).attr('data-index');
 		var sc_ident = search_return[index].id;
 		var title = search_return[index].title;
@@ -200,7 +196,6 @@ function searchResultClick() {
 			genre = search_return[index].genre;
 		}
 		app.addNewSong(artist, title, stream_url, album_art, sc_ident, genre);
-		console.log('added to db');
 		if(typeof(song) === 'undefined') {
 			app.changeCurrentSong(sc_ident); // Plays if no song is in the room yet
 			$('#current-track').text(title); // Changes currently playing text
@@ -211,14 +206,12 @@ function searchResultClick() {
 // Submits like or dislike to currently played song --------------------------------------
 function voteClick() {
 	$('#like').on('click', function(e) {
-		console.log('clicked');
 		if(like_count === 0) { // If you haven't voted before, you can vote.
 			app.likeOrDislike('like');
 			like_count++;
 		}
 	});
 	$('#dislike').on('click', function(e) {
-		console.log('clicked');
 		if(dislike_count === 0) { // If you haven't voted before, you can vote.
 			app.likeOrDislike('dislike');
 			dislike_count++;
@@ -228,8 +221,7 @@ function voteClick() {
 
 // Submits message to chatroom when clicked or enter -------------------------------------
 function messageClick() {
-	$message_input = $('#message-input')
-
+	$message_input = $('#message-input');
 	$('#send').on('click', function(e) {
 		e.preventDefault();
 		message = $message_input.val(); // Gets the message content from input field
@@ -252,12 +244,11 @@ function messageClick() {
 
 // Checks to see if you have unviewed messages -------------------------------------------
 function checkMessages() {
-	$logo_chat = $('#logo-chat')
+	$logo_chat = $('#logo-chat');
 	if($('#chatroom:visible').length === 0 && num_messages > 0) {
 		$logo_chat.animate({
 			"background-color": "red"
 		}, 300);
-		console.log(num_messages);
 	} else {
 		num_messages = 0;
 		$logo_chat.animate({
@@ -271,7 +262,6 @@ function muteButton() {
 	$('#mute').on('click', function() {
 		song.toggleMute();
 		isMuted = !isMuted; // Each time you click, toggles between true and false
-		console.log(song);
 	});
 }
 
@@ -280,9 +270,9 @@ function animateAlbumArt(album_art) {
 	var $container = $('#album-art-container');
 	var msnry = $container.data('masonry');
 	$container.masonry({
-	  itemSelector: '.cover-art',
-	  columnWidth: 80,
-	  isAnimated: true
+		itemSelector: '.cover-art',
+		columnWidth: 80,
+		isAnimated: true
 	});
 	var random_num = (Math.random()*70)+90;
   var $image_div = $("<div class='cover-art'><img style='height: "+random_num+"px; width: "+random_num+"px;' src="+album_art+">");
@@ -301,7 +291,7 @@ function volumeSlider() {
 	$('#slider').on('slide', function() {
 		volume = $('#slider').slider('value');
 		$('#vol').text(volume);
-		if(song) {		
+		if(song) {
 			song.setVolume(volume); // Changes song volume based on slider value
 		}
 	});
