@@ -19,7 +19,7 @@ function prepareBroadcast() {
 				columnWidth: 80,
 				isAnimated: true
 			});
-			var random_num = (Math.random()*70)+90;
+			var random_num = (Math.random() * 70) + 90;
 			var $image_div = $("<div id='art-" + data.sc_ident + "' class='cover-art'><img style='height: " + random_num + "px; width: " + random_num + "px;' src=" + data.album_art + ">");
 			$container.prepend($image_div).masonry('reload');
 			// --- end ---
