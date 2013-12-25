@@ -2,9 +2,7 @@ require 'streamer/sse' # found in lib
 
 class RoomsController < ApplicationController 
 	include ActionController::Live  # allows for use of SSE and concurrency (web socket)
-
 	before_filter :authenticate_user!
-
 
 	# Initializes each room ----------------------------------------------------------------
 	def initialize_room  
