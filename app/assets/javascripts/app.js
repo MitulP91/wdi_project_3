@@ -79,6 +79,5 @@ var app = {
 			data: {message: string}
 		});
 	}
-
 };
 
